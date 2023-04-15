@@ -1,0 +1,4 @@
+name: "DataManager"
+version: 0.0.1
+api: 1.0.0
+main: me.coolmagic233.datamanager.DataManager

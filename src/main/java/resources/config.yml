@@ -1,0 +1,9 @@
+变量:
+  - "Level"
+工作模式: "only"
+mysql:
+  ip: localhost
+  port: 3306
+  database: "database"
+  username: "username"
+  password: "password"

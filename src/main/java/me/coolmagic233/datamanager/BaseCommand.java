@@ -30,7 +30,7 @@
                DataManager.getInstance().getServer().getPlayer(strings[1]) == null || DataManager.getInstance().getWorkMode().getPlayerData(DataManager.getInstance().getServer().getPlayer(strings[1]), strings[2]) == null)) {
                return true;
              }
-             commandSender.sendMessage((String)DataManager.getInstance().getWorkMode().getPlayerData(DataManager.getInstance().getServer().getPlayer(strings[1]), strings[2]));
+             commandSender.sendMessage(String.valueOf(DataManager.getInstance().getWorkMode().getPlayerData(DataManager.getInstance().getServer().getPlayer(strings[1]), strings[2])));
            }
            break;
          case "get_all":

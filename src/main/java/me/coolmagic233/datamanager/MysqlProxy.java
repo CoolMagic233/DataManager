@@ -38,13 +38,11 @@
 
   @Override
    public void createPlayerData(Player player) throws SQLException {
-     if (!accountExists(player.getName(), DataManager.getInstance().getVarData().get(0))) {
        for (String varDatum : DataManager.getInstance().getVarData()) {
-         setPlayerData(player, varDatum, "none");
+         if (!accountExists(player.getName(), varDatum)) {
+           setPlayerData(player, varDatum, "none");
        }
-       DataManager.getInstance().getLogger().info(player.getName() + "的数据文件不存在，正在初始化数据");
-       createPlayerData(player);
-     } else {
+     }
        DataManager.getInstance().getPlayerData().put(player, new BaseData(player));
        DataManager.getInstance().getLogger().info(player.getName() + "的数据文件已存在，正在同步数据");
        for (String varDatum : DataManager.getInstance().getVarData()) {
@@ -63,7 +61,6 @@
        if (DataManager.getInstance().getVarData().size() == (DataManager.getInstance().getPlayerData().get(player)).getData().size()) {
          DataManager.getInstance().getLogger().info(player.getName() + "的数据已同步完毕!(" + (DataManager.getInstance().getPlayerData().get(player)).getData().size() + ")");
        }
-     }
    }
 
  @Override

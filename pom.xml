@@ -9,8 +9,8 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -19,14 +19,14 @@
             <artifactId>DbLib</artifactId>
             <version>1.0.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/[D][前置]DbLib.jar</systemPath>
+            <systemPath>${project.basedir}/lib/DbLib_1.0.1.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>cn.nukkit</groupId>
             <artifactId>nukkit</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath> ${project.basedir}/server.jar</systemPath>
+            <systemPath> ${project.basedir}/lib/server.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

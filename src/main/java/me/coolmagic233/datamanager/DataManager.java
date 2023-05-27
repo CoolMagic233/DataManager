@@ -25,7 +25,7 @@
    private boolean debug = false;
 
    public static DataManager plugin;
-
+   @Override
    public void onEnable() {
      plugin = this;
      saveDefaultConfig();
@@ -36,7 +36,7 @@
      init();
      getLogger().info("插件加载成功, 目前运行插件版本号:" + getDescription().getVersion());
    }
-
+   @Override
    public void onDisable() {
      if (this.workMode instanceof YamlProxy)
        (new MysqlProxy()).close();

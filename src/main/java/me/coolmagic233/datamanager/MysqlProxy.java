@@ -7,6 +7,7 @@
  import java.sql.ResultSet;
  import java.sql.SQLException;
  import java.sql.Statement;
+ import java.util.LinkedHashMap;
 
  public class MysqlProxy implements Proxy {
    public void connectionSql() {
@@ -35,7 +36,7 @@
      }
    }
 
-
+  @Override
    public void createPlayerData(Player player) throws SQLException {
      if (!accountExists(player.getName(), DataManager.getInstance().getVarData().get(0))) {
        for (String varDatum : DataManager.getInstance().getVarData()) {
@@ -65,12 +66,12 @@
      }
    }
 
-
+ @Override
    public Object getPlayerData(Player player, Object o) {
      return ((BaseData)DataManager.getInstance().getPlayerData().get(player)).getData().getOrDefault(o, null);
    }
 
-
+ @Override
    public void deletePlayerData(Player player) {
      player.kick("您的玩家数据被删除，请重新进入游戏初始化");
      for (String varDatum : DataManager.getInstance().getVarData()) {
@@ -85,7 +86,7 @@
    }
 
 
-
+ @Override
    public void setPlayerData(Player player, Object old, Object dest) {
      if (accountExists(player.getName(), old)) {
        try {
@@ -129,5 +130,18 @@
      }
 
      return false;
+   }
+   @Override
+   public LinkedHashMap<String, Object> getAll(Object key) {
+     LinkedHashMap<String, Object> all = new LinkedHashMap<String, Object>();
+     try {
+       ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM "+key);
+       while (resultSet.next()) {
+         all.put(resultSet.getString("id"), resultSet.getObject(String.valueOf(key)));
+       }
+     } catch (SQLException ex) {
+       ex.printStackTrace();
+     }
+     return all;
    }
  }

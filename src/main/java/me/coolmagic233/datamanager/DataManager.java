@@ -7,6 +7,7 @@
  import cn.nukkit.event.player.PlayerQuitEvent;
  import cn.nukkit.plugin.Plugin;
  import cn.nukkit.plugin.PluginBase;
+ import cn.nukkit.scheduler.Task;
  import cn.nukkit.utils.Config;
  import java.io.File;
  import java.sql.SQLException;
@@ -114,20 +115,25 @@
    @EventHandler
    public void onQuit(PlayerQuitEvent e) {
      Player player = e.getPlayer();
-
-     if (this.workMode instanceof YamlProxy) {
-       Config config = new Config(getPlayerFile(player), 2);
-       for (Map.Entry<String, Object> value : ((BaseData)getPlayerData().get(player)).getData().entrySet()) {
-         config.set(value.getKey(), value.getValue());
-         config.save();
+     //延迟执行是为了让其他插件处理调用该插件退出时的任务
+     getServer().getScheduler().scheduleDelayedTask(new Task() {
+       @Override
+       public void onRun(int i) {
+         if (workMode instanceof YamlProxy) {
+           Config config = new Config(getPlayerFile(player), 2);
+           for (Map.Entry<String, Object> value : ((BaseData)getPlayerData().get(player)).getData().entrySet()) {
+             config.set(value.getKey(), value.getValue());
+             config.save();
+           }
+         }
+         if (workMode instanceof MysqlProxy) {
+           for (Map.Entry<String, Object> value : ((BaseData)getPlayerData().get(player)).getData().entrySet()) {
+             workMode.setPlayerData(player, value.getKey(), value.getValue());
+           }
+         }
+         getPlayerData().remove(player);
        }
-     }
-     if (this.workMode instanceof MysqlProxy) {
-       for (Map.Entry<String, Object> value : ((BaseData)getPlayerData().get(player)).getData().entrySet()) {
-         this.workMode.setPlayerData(player, value.getKey(), value.getValue());
-       }
-     }
-     getPlayerData().remove(player);
+     },25);
    }
    public File getPlayerDataFolder() {
      return new File(getDataFolder() + File.separator + "data");

@@ -1,5 +1,6 @@
  package me.coolmagic233.datamanager;
  import cn.nukkit.Player;
+ import cn.nukkit.scheduler.AsyncTask;
  import cn.nukkit.utils.Config;
  import java.sql.Connection;
  import java.sql.DriverManager;
@@ -8,6 +9,7 @@
  import java.sql.SQLException;
  import java.sql.Statement;
  import java.util.LinkedHashMap;
+ import java.util.Map;
 
  public class MysqlProxy implements Proxy {
    public void connectionSql() {
@@ -103,6 +105,25 @@
        }
      }
    }
+   @Override
+   public void setData(String key, Object old, Object dest) {
+     if (accountExists(key, old)) {
+       try {
+         connection.createStatement().executeUpdate("UPDATE `" + old + "` SET `" + old + "` = '" + dest + "' WHERE id='" + key + "'");
+       } catch (SQLException ex) {
+         ex.printStackTrace();
+       }
+     } else {
+       try {
+         PreparedStatement newUserStatement = connection.prepareStatement("INSERT INTO `" + old + "` (id, " + old + ") VALUES (?,?)");
+         newUserStatement.setString(1, key);
+         newUserStatement.setString(2, (String)dest);
+         newUserStatement.executeUpdate();
+       } catch (SQLException ex) {
+         ex.printStackTrace();
+       }
+     }
+   }
 
    private void create(String o) {
      try {
@@ -140,5 +161,19 @@
        ex.printStackTrace();
      }
      return all;
+   }
+
+   @Override
+   public void setAll(Object key, Object value) {
+     DataManager.getInstance().getServer().getScheduler().scheduleAsyncTask(new AsyncTask() {
+       @Override
+       public void onRun() {
+         String kdy1 = String.valueOf(key);
+         String value1 = String.valueOf(value);
+         for (Map.Entry<String, Object> stringObjectEntry : getAll(key).entrySet()) {
+           setData(stringObjectEntry.getKey(),kdy1,value1);
+         }
+       }
+     });
    }
  }

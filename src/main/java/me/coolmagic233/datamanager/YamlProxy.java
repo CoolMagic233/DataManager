@@ -1,6 +1,7 @@
  package me.coolmagic233.datamanager;
 
  import cn.nukkit.Player;
+ import cn.nukkit.scheduler.AsyncTask;
  import cn.nukkit.utils.Config;
  import java.io.File;
  import java.util.LinkedHashMap;
@@ -55,6 +56,16 @@
      config.set((String)old, dest);
      config.save();
    }
+
+     @Override
+     public void setData(String key, Object paramObject1, Object paramObject2) {
+         if (DataManager.getInstance().getPlayerFileByName(key) != null){
+             Config config = new Config(DataManager.getInstance().getPlayerFileByName(key), 2);
+             config.set(String.valueOf(paramObject1),paramObject2);
+             config.save();
+         }
+     }
+
      @Override
      public LinkedHashMap<String, Object> getAll(Object key) {
          LinkedHashMap<String,Object> map = new LinkedHashMap<>();
@@ -65,5 +76,19 @@
              }
          }
          return map;
+     }
+
+     @Override
+     public void setAll(Object key, Object value) {
+         DataManager.getInstance().getServer().getScheduler().scheduleAsyncTask(new AsyncTask() {
+             @Override
+             public void onRun() {
+                 for (String s : getAll(key).keySet()) {
+                     Config config = new Config(DataManager.getInstance().getPlayerFileByName(s), 2);
+                     config.set((String) key, value);
+                     config.save();
+                 }
+             }
+         });
      }
  }

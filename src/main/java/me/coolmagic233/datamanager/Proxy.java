@@ -12,5 +12,7 @@ public interface Proxy {
   void deletePlayerData(Player paramPlayer);
   
   void setPlayerData(Player paramPlayer, Object paramObject1, Object paramObject2);
+  void setData(String key, Object paramObject1, Object paramObject2);
   LinkedHashMap<String, Object> getAll(Object key);
+  void setAll(Object key,Object value);
 }

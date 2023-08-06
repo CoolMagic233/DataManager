@@ -11,10 +11,7 @@
  import cn.nukkit.utils.Config;
  import java.io.File;
  import java.sql.SQLException;
- import java.util.ArrayList;
- import java.util.HashMap;
- import java.util.List;
- import java.util.Map;
+ import java.util.*;
 
  public class DataManager
    extends PluginBase implements Listener {
@@ -95,8 +92,16 @@
      player.sendMessage("你的账户数据中的" + old + "选项已设置为" + dest);
    }
 
+   public void updateData(String key,String value){
+     workMode.setAll(key,value);
+   }
+
    public Map<Player, BaseData> getPlayerData() {
      return this.playerData;
+   }
+
+   public LinkedHashMap<String, Object> getData(String key){
+     return workMode.getAll(key);
    }
 
    public List<String> getVarData() {
@@ -155,6 +160,16 @@
        return playerFile;
      }
      return null;
+   }
+   public File getPlayerFileByName(String name) {
+     File playerFile = null;
+     for (File file : getInstance().getPlayerDataFolder().listFiles()) {
+       if (file.getName().split("\\.")[0].equals(name)) {
+         playerFile = file;
+         break;
+       }
+     }
+     return playerFile;
    }
 
    public boolean isDebug() {

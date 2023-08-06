@@ -1,5 +1,5 @@
 name: "DataManager"
-version: 0.4
+version: 0.6
 api: 1.0.0
 main: me.coolmagic233.datamanager.DataManager
 load: STARTUP

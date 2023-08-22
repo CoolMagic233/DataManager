@@ -71,8 +71,14 @@
          LinkedHashMap<String,Object> map = new LinkedHashMap<>();
          for (File file : DataManager.getInstance().getPlayerDataFolder().listFiles()) {
              if (file.getName().split("\\.")[1].equals("yml")) {
-                 Config config = new Config(file,Config.YAML);
-                 map.put(file.getName().split("\\.")[0],config.get(String.valueOf(key)));
+                 try{
+                     Config config = new Config(file,Config.YAML);
+                     map.put(file.getName().split("\\.")[0],config.get(String.valueOf(key)));
+                 }catch (Exception e){
+                     DataManager.getInstance().getLogger().warning("数据"+file.getName()+"无法处理");
+                     map.remove(file.getName().split("\\.")[0]);
+                     new File(file.toURI()).delete();
+                 }
              }
          }
          return map;
